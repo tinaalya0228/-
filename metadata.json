@@ -1,0 +1,8 @@
+{
+  "name": "塗鴉筆記",
+  "description": "專為插畫與創作者設計的塗鴉筆記與繪圖委託管理儀表板。具備作品集展現（可隱藏）、社交媒體分享連結、訪客線上填單預約、以及專案、任務進度雲端資料管理模組。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

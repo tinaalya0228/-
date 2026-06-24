@@ -1,0 +1,139 @@
+rules_version = '2';
+service cloud_firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Entity Validations
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['displayName', 'portfolioVisible']) 
+        && data.displayName is string 
+        && data.displayName.size() > 0 
+        && data.displayName.size() <= 100
+        && data.portfolioVisible is bool;
+    }
+
+    function isValidCommission(data) {
+      return data.keys().hasAll(['userId', 'title', 'clientName', 'description', 'price', 'status', 'deadline'])
+        && data.userId is string
+        && data.userId.size() <= 128
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.clientName is string
+        && data.clientName.size() > 0
+        && data.clientName.size() <= 100
+        && data.description is string
+        && data.description.size() <= 2000
+        && data.price is number
+        && data.price >= 0
+        && data.status is string
+        && (data.status == 'pending' || data.status == 'in_progress' || data.status == 'completed' || data.status == 'cancelled')
+        && data.deadline is string;
+    }
+
+    function isValidTask(data) {
+      return data.keys().hasAll(['userId', 'projectId', 'title', 'completed', 'dueDate'])
+        && data.userId is string
+        && data.userId.size() <= 128
+        && data.projectId is string
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 300
+        && data.completed is bool
+        && data.dueDate is string;
+    }
+
+    function isValidPortfolioItem(data) {
+      return data.keys().hasAll(['userId', 'title', 'imageUrl', 'description', 'visible'])
+        && data.userId is string
+        && data.userId.size() <= 128
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.imageUrl is string
+        && data.imageUrl.size() <= 2000
+        && data.description is string
+        && data.description.size() <= 1000
+        && data.visible is bool;
+    }
+
+    function isValidBooking(data) {
+      return data.keys().hasAll(['freelancerId', 'clientName', 'clientEmail', 'title', 'description', 'budget', 'status'])
+        && data.freelancerId is string
+        && data.freelancerId.size() <= 128
+        && data.clientName is string
+        && data.clientName.size() > 0
+        && data.clientName.size() <= 100
+        && data.clientEmail is string
+        && data.clientEmail.size() > 0
+        && data.clientEmail.size() <= 200
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.description is string
+        && data.description.size() <= 2000
+        && data.budget is number
+        && data.budget >= 0
+        && data.status is string
+        && (data.status == 'pending' || data.status == 'accepted' || data.status == 'declined');
+    }
+
+    // Rules for Users collection
+    match /users/{userId} {
+      allow get: if true;
+      allow list: if true;
+      allow create, update: if isOwner(userId) && isValidUserProfile(request.resource.data);
+      allow delete: if isOwner(userId);
+    }
+
+    // Rules for Commissions collection
+    match /commissions/{commissionId} {
+      allow get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidCommission(request.resource.data);
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid && isValidCommission(request.resource.data);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Rules for Tasks collection
+    match /tasks/{taskId} {
+      allow get, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidTask(request.resource.data);
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid && isValidTask(request.resource.data);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Rules for Portfolio collection
+    match /portfolio/{portfolioId} {
+      allow get: if true;
+      allow list: if (resource == null || resource.data.visible == true || (isSignedIn() && resource.data.userId == request.auth.uid));
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid && isValidPortfolioItem(request.resource.data);
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && request.resource.data.userId == request.auth.uid && isValidPortfolioItem(request.resource.data);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // Rules for Bookings collection
+    match /bookings/{bookingId} {
+      allow get, list: if isSignedIn() && resource.data.freelancerId == request.auth.uid;
+      allow create: if request.resource.data.status == 'pending' && isValidBooking(request.resource.data);
+      allow update: if isSignedIn() && resource.data.freelancerId == request.auth.uid && request.resource.data.freelancerId == request.auth.uid && isValidBooking(request.resource.data);
+      allow delete: if isSignedIn() && resource.data.freelancerId == request.auth.uid;
+    }
+  }
+}

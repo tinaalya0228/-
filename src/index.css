@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-slate-50: #F5F5F0;
+  --color-slate-100: #E8E6E0;
+  --color-slate-200: #D9D6CE;
+  --color-slate-300: #C2BFB5;
+  --color-slate-400: #A89F8E;
+  --color-slate-500: #8E8677;
+  --color-slate-600: #756D5F;
+  --color-slate-700: #5B5549;
+  --color-slate-800: #423E35;
+  --color-slate-900: #2D2D2A;
+  --color-slate-950: #201F1B;
+
+  --color-indigo-50: #F2F1EC;
+  --color-indigo-100: #E8E6E0;
+  --color-indigo-200: #DED9D1;
+  --color-indigo-300: #C9C5B9;
+  --color-indigo-400: #A89F8E;
+  --color-indigo-500: #6E6E4F;
+  --color-indigo-600: #5A5A40;
+  --color-indigo-700: #484833;
+  --color-indigo-800: #393928;
+  --color-indigo-900: #2D2D2A;
+  --color-indigo-950: #1F1F1B;
+  
+  --color-emerald-50: #EEF2EB;
+  --color-emerald-100: #DEE6D9;
+  --color-emerald-600: #5C7053;
+  --color-emerald-700: #495942;
+  --color-emerald-800: #374332;
+
+  --color-amber-50: #FAF6ED;
+  --color-amber-100: #F4EAD1;
+  --color-amber-600: #9E7D46;
+  --color-amber-700: #7F6335;
+  --color-amber-800: #5F4A26;
+
+  --color-rose-50: #F7EFE9;
+  --color-rose-100: #F0DFC2;
+  --color-rose-500: #BC745D;
+  --color-rose-600: #9E5B45;
+  --color-rose-700: #7F4835;
+
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #F5F5F0;
+  color: #2D2D2A;
+}
+
+h1, h2, .font-serif-display {
+  font-family: var(--font-serif);
+}
+
+/* Custom gorgeous scrollbar for client-side lists */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #A89F8E;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8E8677;
+}

@@ -1,0 +1,198 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User custom profile details and social links.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "Custom user display name."
+        },
+        "bio": {
+          "type": "string",
+          "description": "Short bio or illustration style introduction."
+        },
+        "avatarUrl": {
+          "type": "string",
+          "description": "URL of the local avatar image or preset identifier."
+        },
+        "socialLinks": {
+          "type": "string",
+          "description": "JSON string containing social media URLs."
+        },
+        "portfolioVisible": {
+          "type": "boolean",
+          "description": "Whether to make portfolio section visible to public visitors."
+        }
+      },
+      "required": ["displayName", "portfolioVisible"]
+    },
+    "Commission": {
+      "title": "Commission",
+      "description": "An illustration commission project registered by the user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UID of the owner freelancer."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the illustration/project."
+        },
+        "clientName": {
+          "type": "string",
+          "description": "Name of the client."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed commission content/requirements."
+        },
+        "price": {
+          "type": "number",
+          "description": "Commission price."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the commission: pending, in_progress, completed, cancelled."
+        },
+        "deadline": {
+          "type": "string",
+          "description": "Deadline or expected completion date."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["userId", "title", "clientName", "price", "status"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A workflow task for commission progress tracking.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UID of the user."
+        },
+        "projectId": {
+          "type": "string",
+          "description": "Linked commission project ID."
+        },
+        "title": {
+          "type": "string",
+          "description": "Task name."
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Whether the task is completed."
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "Target completion date."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["userId", "title", "completed"]
+    },
+    "PortfolioItem": {
+      "title": "PortfolioItem",
+      "description": "An artwork in the freelancer's portfolio.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UID of the user."
+        },
+        "title": {
+          "type": "string",
+          "description": "Artwork title."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the artwork image."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the art piece."
+        },
+        "visible": {
+          "type": "boolean",
+          "description": "Whether this piece is visible in public portfolio."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["userId", "title", "imageUrl", "visible"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "A booking request submitted by a public visitor.",
+      "type": "object",
+      "properties": {
+        "freelancerId": {
+          "type": "string",
+          "description": "UID of the target freelancer being booked."
+        },
+        "clientName": {
+          "type": "string",
+          "description": "Name of the booking client."
+        },
+        "clientEmail": {
+          "type": "string",
+          "description": "Email of the booking client for contact."
+        },
+        "title": {
+          "type": "string",
+          "description": "Project title or details requested."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed requirements for booking."
+        },
+        "budget": {
+          "type": "number",
+          "description": "Proposed budget."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the booking: pending, accepted, declined."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["freelancerId", "clientName", "clientEmail", "title", "status"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Freelancer public & private profile document."
+    },
+    "commissions/{commissionId}": {
+      "schema": "Commission",
+      "description": "Commission entries."
+    },
+    "tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Freelancer workflow tasks."
+    },
+    "portfolio/{portfolioId}": {
+      "schema": "PortfolioItem",
+      "description": "Freelancer portfolio artwork list."
+    },
+    "bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Booking request inquiries submitted by clients."
+    }
+  }
+}
